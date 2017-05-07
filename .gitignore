@@ -17,3 +17,6 @@ hs_err_pid*
 .idea/uiDesigner.xml
 .idea/workspace.xml
 COMP3260_A1.iml
+.idea/kotlinc.xml
+.idea/vcs.xml
+AES-Encryption.iml
