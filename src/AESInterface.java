@@ -43,13 +43,8 @@ public class AESInterface {
 
         switch (mode) {
             case 0:
-                ecb = new ECB(encrypt, transSize, plainText, key, iv);
-                if (encrypt){
-                    ecb.encrypt();
-                }
-                else{
-                    //ecb.decrypt();
-                }
+                ecb = new ECB(true, transSize, plainText, key, iv);
+                ecb.run();
         }
     }
 

@@ -13,7 +13,6 @@ public abstract class Operation {
 
     public Operation(boolean encrypt, BitSet[] transSize, BitSet[] plainText, BitSet[] key, BitSet[] iv){
         this.encrypt = encrypt;
-        this.sbox = sbox;
         this.transSize = transSize;
         this.plainText = plainText;
         this.key = key;
@@ -27,6 +26,15 @@ public abstract class Operation {
     public abstract void encrypt();
 
     public abstract void decrypt();
+
+    public void run() {
+        if (encrypt){
+            encrypt();
+        }
+        else{
+            //ecb.decrypt();
+        }
+    }
 
     public void subBytes(){
         state.subBytes();

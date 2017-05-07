@@ -45,6 +45,10 @@ public class SBox {
         return arrayToSbox(hexStringToBitSetArray(inverseSboxString.replaceAll("\\s",""), 256));
     }
 
+    public static BitSet getByte(BitSet[][] sbox, int row, int column){
+        return sbox[row][column];
+    }
+
     public static BitSet[][] arrayToSbox(BitSet[] bsArray){
         BitSet[][] sbox = new BitSet[16][16];
 
