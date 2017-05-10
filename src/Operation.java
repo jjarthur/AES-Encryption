@@ -1,15 +1,19 @@
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 public abstract class Operation {
 
     protected boolean encrypt; //True if encrypting, false if decrypting
+    protected final int rounds = 10;
     protected BitSet[][] sbox; //16 by 16 byte matrix
     protected BitSet[][] inverseSbox; //16 by 16 byte matrix
     protected BitSet[] transSize; //Between 1 and 16 bytes (0 if not applicable)
     protected BitSet[] plainText; //32 bytes
     protected BitSet[] key; //16 bytes
     protected BitSet[] iv; //16 bytes (0 if not applicable)
-    protected State state; //Current state
+    protected Matrix state; //Current state
+    protected List<BitSet[][]> keySchedule;
 
     public Operation(boolean encrypt, BitSet[] transSize, BitSet[] plainText, BitSet[] key, BitSet[] iv){
         this.encrypt = encrypt;
@@ -20,7 +24,8 @@ public abstract class Operation {
 
         sbox = SBox.getSbox();
         inverseSbox = SBox.getInverseSbox();
-        state = new State(plainText);
+        state = new Matrix(plainText, plainText.length/4);
+        keySchedule = keyExpansion();
     }
 
     public abstract void encrypt();
@@ -50,5 +55,15 @@ public abstract class Operation {
 
     public void addRoundKey(){
         state.addRoundKey();
+    }
+
+    public List<BitSet[][]> keyExpansion(){
+        List<BitSet[][]> keySchedule = new ArrayList<>();
+
+        for (int i = 0; i < rounds; i++){
+
+        }
+
+        return keySchedule;
     }
 }

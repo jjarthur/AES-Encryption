@@ -1,24 +1,26 @@
 import java.util.BitSet;
 
-public class State {
-    private BitSet[][] state = new BitSet[4][8];
+public class Matrix {
+    private BitSet[][] matrix;
 
-    public State(BitSet[] bsArray){
-        arrayToState(bsArray);
+    public Matrix(BitSet[] bsArray, int columns){
+        matrix = new BitSet[4][columns];
+        arrayToMatrix(bsArray);
+        outputMatrix();
     }
 
-    public void arrayToState(BitSet[] bsArray){
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 8; j++){
-                state[i][j] = bsArray[i*8+j];
+    public void arrayToMatrix(BitSet[] bsArray){
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                matrix[i][j] = bsArray[i*8+j];
             }
         }
     }
 
     public void subBytes(){
-        for (int i = 0; i < state.length; i++){
-            for (int j = 0; j < state[0].length; j++){
-                state[i][j] = SBox.getByte(SBox.getSbox(), bitSetToInt(state[i][j])[0], bitSetToInt(state[i][j])[1]);
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                matrix[i][j] = SBox.getByte(SBox.getSbox(), bitSetToInt(matrix[i][j])[0], bitSetToInt(matrix[i][j])[1]);
             }
         }
     }
@@ -32,9 +34,9 @@ public class State {
         for (int i = 0; i < 4; i++){
             switch(i){
                 case 0: break;
-                case 1: rotWord(state[i]);break;
-                case 2: rotWord(state[i]);rotWord(state[i]);break;
-                case 3: rotWord(state[i]);rotWord(state[i]);rotWord(state[i]);break;
+                case 1: rotWord(matrix[i]);break;
+                case 2: rotWord(matrix[i]);rotWord(matrix[i]);break;
+                case 3: rotWord(matrix[i]);rotWord(matrix[i]);rotWord(matrix[i]);break;
             }
         }
     }
@@ -58,10 +60,10 @@ public class State {
 
     }
 
-    public void outputState(){
+    public void outputMatrix(){
         for (int i = 0; i < 4; i++){
             for (int j = 0; j < 8; j++){
-                System.out.print(state[i][j] + " ");
+                System.out.print(matrix[i][j] + " ");
             }
             System.out.println();
         }
