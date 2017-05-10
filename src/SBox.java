@@ -1,6 +1,6 @@
 import java.util.BitSet;
 
-public class SBox {
+public class SBox extends Matrix {
     private static final String sboxString = //S-Box HexString
             "63 7C 77 7B F2 6B 6F C5 30 01 67 2B FE D7 AB 76 " +
             "CA 82 C9 7D FA 59 47 F0 AD D4 A2 AF 9C A4 72 C0 " +
@@ -37,83 +37,26 @@ public class SBox {
             "A0 E0 3B 4D AE 2A F5 B0 C8 EB BB 3C 83 53 99 61 " +
             "17 2B 04 7E BA 77 D6 26 E1 69 14 63 55 21 0C 7D";
 
+    public SBox(boolean inverse){
+        matrix = new BitSet[16][16];
+        if (inverse){
+            matrix = arrayToMatrix(hexStringToBitSetArray(inverseSboxString.replaceAll("\\s",""), 256), 16, 16);
+
+        }
+        else{
+            matrix = arrayToMatrix(hexStringToBitSetArray(sboxString.replaceAll("\\s",""), 256), 16, 16);
+        }
+    }
+
     public static BitSet[][] getSbox(){
-        return arrayToSbox(hexStringToBitSetArray(sboxString.replaceAll("\\s",""), 256));
+        return arrayToMatrix(hexStringToBitSetArray(sboxString.replaceAll("\\s",""), 256), 16, 16);
     }
 
     public static BitSet[][] getInverseSbox(){
-        return arrayToSbox(hexStringToBitSetArray(inverseSboxString.replaceAll("\\s",""), 256));
+        return arrayToMatrix(hexStringToBitSetArray(inverseSboxString.replaceAll("\\s",""), 256), 16, 16);
     }
 
     public static BitSet getByte(BitSet[][] sbox, int row, int column){
         return sbox[row][column];
-    }
-
-    public static BitSet[][] arrayToSbox(BitSet[] bsArray){
-        BitSet[][] sbox = new BitSet[16][16];
-
-        for (int i = 0; i < 16; i++){
-            for (int j = 0; j < 16; j++){
-                sbox[i][j] = bsArray[i*16+j];
-            }
-        }
-
-        return sbox;
-    }
-
-    public static BitSet[] hexStringToBitSetArray(String hexString, int length){
-        BitSet[] bsArray = new BitSet[length];
-        String bitString = "";
-        String[] hexArray = hexString.split("");
-
-        for (int i = 0; i < hexArray.length; i++){
-            bitString += hexStringToBitString(hexArray[i]);
-        }
-
-        for (int i = 0; i < length; i++){
-            BitSet tempBS = new BitSet(8);
-            for (int j = 0; j < 8; j++){
-                if (bitString.charAt(i*8+j) == '1'){
-                    tempBS.set(j);
-                }
-            }
-            bsArray[i] = tempBS;
-        }
-
-        return bsArray;
-    }
-
-    public static String hexStringToBitString (String hexString){
-        String bs;
-        switch(hexString.toUpperCase()){ //Normalize input
-            case "0": bs = "0000"; break;
-            case "1": bs = "0001"; break;
-            case "2": bs = "0010"; break;
-            case "3": bs = "0011"; break;
-            case "4": bs = "0100"; break;
-            case "5": bs = "0101"; break;
-            case "6": bs = "0110"; break;
-            case "7": bs = "0111"; break;
-            case "8": bs = "1000"; break;
-            case "9": bs = "1001"; break;
-            case "A": bs = "1010"; break;
-            case "B": bs = "1011"; break;
-            case "C": bs = "1100"; break;
-            case "D": bs = "1101"; break;
-            case "E": bs = "1110"; break;
-            case "F": bs = "1111"; break;
-            default: bs = null;
-        }
-
-        return bs;
-    }
-
-    public static void outputSbox(BitSet[][] sbox){
-        for (int i = 0; i < 16; i++){
-            for (int j = 0; j < 16; j++){
-                System.out.print(sbox[i][j]);
-            }
-            System.out.println();
-        }
     }
 }

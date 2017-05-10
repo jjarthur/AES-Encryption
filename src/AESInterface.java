@@ -67,19 +67,19 @@ public class AESInterface {
             //Getting transSize
             tempString = scanner.nextLine().replaceAll("\\s","");
             if (!tempString.equals("0")){
-                transSize = SBox.hexStringToBitSetArray(tempString, transSize.length);
+                transSize = Matrix.hexStringToBitSetArray(tempString, transSize.length);
             }
 
             //Getting plainText
-            plainText = SBox.hexStringToBitSetArray(scanner.nextLine().replaceAll("\\s",""), plainText.length);
+            plainText = Matrix.hexStringToBitSetArray(scanner.nextLine().replaceAll("\\s",""), plainText.length);
 
             //Getting key
-            key = SBox.hexStringToBitSetArray(scanner.nextLine().replaceAll("\\s",""), key.length);
+            key = Matrix.hexStringToBitSetArray(scanner.nextLine().replaceAll("\\s",""), key.length);
 
             //Getting initialization vector
             tempString = scanner.nextLine().replaceAll("\\s","");
             if (!tempString.equals("0")){
-                iv = SBox.hexStringToBitSetArray(tempString, iv.length);
+                iv = Matrix.hexStringToBitSetArray(tempString, iv.length);
             }
 
             scanner.close();

@@ -6,8 +6,8 @@ public abstract class Operation {
 
     protected boolean encrypt; //True if encrypting, false if decrypting
     protected final int rounds = 10;
-    protected BitSet[][] sbox; //16 by 16 byte matrix
-    protected BitSet[][] inverseSbox; //16 by 16 byte matrix
+    protected SBox sbox; //16 by 16 byte matrix
+    protected SBox inverseSbox; //16 by 16 byte matrix
     protected BitSet[] transSize; //Between 1 and 16 bytes (0 if not applicable)
     protected BitSet[] plainText; //32 bytes
     protected BitSet[] key; //16 bytes
@@ -22,8 +22,8 @@ public abstract class Operation {
         this.key = key;
         this.iv = iv;
 
-        sbox = SBox.getSbox();
-        inverseSbox = SBox.getInverseSbox();
+        sbox = new SBox(false);
+        inverseSbox = new SBox(true);
         state = new Matrix(plainText, plainText.length/4);
         keySchedule = keyExpansion();
     }
