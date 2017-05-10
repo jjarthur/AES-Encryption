@@ -67,16 +67,21 @@ public class Matrix {
         return word;
     }
 
-//    public BitSet[] rcon(int round){
-//        BitSet[][] rcon = {  };
-//
-//        for (int i = 0; i < word.length-1; i++){
-//            word[i] = word[i+1];
-//        }
-//
-//        word[word.length-1] = temp;
-//        return word;
-//    }
+    //Round must be between 1 and 10
+    public BitSet rcon(int round){
+        String rconString = "01 02 04 08 10 20 40 80 1b 36";
+        BitSet[] rcon = new BitSet[10];
+        BitSet rkey;
+
+        //Removing white-space from rconString
+        rconString = rconString.replaceAll("\\s","");
+        //Creating array of round constant bitsets
+        rcon = hexStringToBitSetArray(rconString, rcon.length);
+
+        rkey = rcon[round-1];
+
+        return rkey;
+    }
 
     public static BitSet[] hexStringToBitSetArray(String hexString, int length){
         BitSet[] bsArray = new BitSet[length];
