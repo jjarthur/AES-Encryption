@@ -7,9 +7,10 @@ public class Matrix {
         matrix = new BitSet[4][4];
     }
 
-    public Matrix(BitSet[] bsArray, int columns){
-        matrix = new BitSet[4][columns];
+    public Matrix(BitSet[] bsArray, int rows, int columns){
+        matrix = new BitSet[rows][columns];
         matrix = arrayToMatrix(bsArray, matrix.length, matrix[0].length);
+
     }
 
     public static BitSet[][] arrayToMatrix(BitSet[] bsArray, int rows, int columns){
@@ -17,7 +18,7 @@ public class Matrix {
 
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
-                matrix[i][j] = bsArray[i*8+j];
+                matrix[i][j] = bsArray[i*columns+j];
             }
         }
 
@@ -27,23 +28,14 @@ public class Matrix {
     public void subBytes(){
         for (int i = 0; i < matrix.length; i++){
             for (int j = 0; j < matrix[0].length; j++){
-                System.out.println(bitSetToInt(matrix[i][j])[0] + "       " + bitSetToInt(matrix[i][j])[1]);
                 matrix[i][j] = SBox.getByte(SBox.getSbox(), bitSetToInt(matrix[i][j])[0], bitSetToInt(matrix[i][j])[1]);
-                //System.out.println(matrix[i][j]);
-                System.out.println(SBox.getByte(SBox.getSbox(), bitSetToInt(matrix[i][j])[0], bitSetToInt(matrix[i][j])[1]));
-                System.out.println();
             }
         }
     }
 
     public int[] bitSetToInt(BitSet bs){
         //Converting the first for bits into one index, and the second four into the other index. Checking for 0 to catch null exceptions.
-        int x = bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0;
-        int y = bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0;
-        //System.out.println(bs);
-        //System.out.println(x + "   " + y);
         return new int[]{ bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0, bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0 };
-        //return new int[]{ y, x };
     }
 
     public void shiftRows(){
@@ -152,5 +144,9 @@ public class Matrix {
             System.out.println();
         }
         System.out.println("\n");
+    }
+
+    public void setMatrix(BitSet[][] matrix){
+        this.matrix = matrix;
     }
 }

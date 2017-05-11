@@ -24,7 +24,7 @@ public abstract class Operation {
 
         sbox = new SBox(false);
         inverseSbox = new SBox(true);
-        state = new Matrix(plainText, plainText.length/4);
+        state = new Matrix(plainText, 4, plainText.length/4);
         keySchedule = keyExpansion();
     }
 

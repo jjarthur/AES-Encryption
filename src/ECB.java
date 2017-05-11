@@ -8,7 +8,7 @@ public class ECB extends Operation {
 
     public void encrypt(){
         state.outputMatrix();
-        subBytes();
+        //subBytes();
         //shiftRows();
         //mixColumns();
         //addRoundKey();

@@ -57,7 +57,6 @@ public class SBox extends Matrix {
     }
 
     public static BitSet getByte(BitSet[][] sbox, int row, int column){
-        System.out.println(sbox[row][column]);
         return sbox[row][column];
     }
 }
