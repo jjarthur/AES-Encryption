@@ -27,14 +27,23 @@ public class Matrix {
     public void subBytes(){
         for (int i = 0; i < matrix.length; i++){
             for (int j = 0; j < matrix[0].length; j++){
+                System.out.println(bitSetToInt(matrix[i][j])[0] + "       " + bitSetToInt(matrix[i][j])[1]);
                 matrix[i][j] = SBox.getByte(SBox.getSbox(), bitSetToInt(matrix[i][j])[0], bitSetToInt(matrix[i][j])[1]);
+                //System.out.println(matrix[i][j]);
+                System.out.println(SBox.getByte(SBox.getSbox(), bitSetToInt(matrix[i][j])[0], bitSetToInt(matrix[i][j])[1]));
+                System.out.println();
             }
         }
     }
 
     public int[] bitSetToInt(BitSet bs){
         //Converting the first for bits into one index, and the second four into the other index. Checking for 0 to catch null exceptions.
-        return new int[]{ bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0, bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0 };
+        int x = bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0;
+        int y = bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0;
+        //System.out.println(bs);
+        //System.out.println(x + "   " + y);
+        return new int[]{ bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0, bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0 };
+        //return new int[]{ y, x };
     }
 
     public void shiftRows(){
@@ -92,6 +101,11 @@ public class Matrix {
             bitString += hexStringToBitString(hexArray[i]);
         }
 
+
+        while (bitString.length() < 8){
+            bitString = "0" + bitString;
+        }
+
         for (int i = 0; i < length; i++){
             BitSet tempBS = new BitSet(8);
             for (int j = 0; j < 8; j++){
@@ -137,5 +151,6 @@ public class Matrix {
             }
             System.out.println();
         }
+        System.out.println("\n");
     }
 }
