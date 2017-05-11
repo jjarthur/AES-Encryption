@@ -16,9 +16,9 @@ public class Matrix {
     public static BitSet[][] arrayToMatrix(BitSet[] bsArray, int rows, int columns){
         BitSet[][] matrix = new BitSet[rows][columns];
 
-        for (int i = 0; i < rows; i++){
-            for (int j = 0; j < columns; j++){
-                matrix[i][j] = bsArray[i*columns+j];
+        for (int i = 0; i < columns; i++){
+            for (int j = 0; j < rows; j++){
+                matrix[j][i] = bsArray[i*rows+j];
             }
         }
 

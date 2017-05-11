@@ -12,7 +12,7 @@ public class ECB extends Operation {
         //shiftRows();
         //mixColumns();
         //addRoundKey();
-        state.outputMatrix();
+        //state.outputMatrix();
     }
 
     public void decrypt(){
