@@ -7,12 +7,20 @@ public class ECB extends Operation {
     }
 
     public void encrypt(){
-        //state.outputMatrix();
-        //subBytes();
-        //shiftRows();
-        //mixColumns();
-        //addRoundKey();
-        //state.outputMatrix();
+        System.out.println("---Input---");
+        outputStates();
+        System.out.println("---SubBytes()---");
+        subBytes();
+        outputStates();
+        System.out.println("---ShiftRows()---");
+        shiftRows();
+        outputStates();
+//        System.out.println("---MixColumns()---");
+//        mixColumns();
+//        outputStates();
+//        System.out.println("---AddRoundKey()---");
+//        addRoundKey();
+//        outputStates();
     }
 
     public void decrypt(){

@@ -28,14 +28,19 @@ public class Matrix {
     public void subBytes(){
         for (int i = 0; i < matrix.length; i++){
             for (int j = 0; j < matrix[0].length; j++){
-                matrix[i][j] = SBox.getByte(SBox.getSbox(), bitSetToInt(matrix[i][j])[0], bitSetToInt(matrix[i][j])[1]);
+                matrix[i][j] = SBox.getByte(SBox.getSbox(), bitSetToIndex(matrix[i][j])[0], bitSetToIndex(matrix[i][j])[1]);
             }
         }
     }
 
-    public int[] bitSetToInt(BitSet bs){
-        //Converting the first for bits into one index, and the second four into the other index. Checking for 0 to catch null exceptions.
-        return new int[]{ bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0, bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0 };
+    public int[] bitSetToIndex(BitSet bs){
+        //Converting the first four bits into one index, and the second four into the other index. Checking for 0 to catch null exceptions.
+        return new int[]{ bs.get(0, 4).toLongArray().length != 0 ? (int)bs.get(0, 4).toLongArray()[0] : 0, bs.get(4, 8).toLongArray().length != 0 ? (int)bs.get(4, 8).toLongArray()[0] : 0 };
+    }
+
+    public int bitSetToInt(BitSet bs){
+        //Converting the BitSet into an integer. Checking for 0 to catch null exceptions.
+        return bs.get(0, 8).toLongArray().length != 0 ? (int)bs.get(0, 8).toLongArray()[0] : 0;
     }
 
     public void shiftRows(){
@@ -136,17 +141,29 @@ public class Matrix {
         return bs;
     }
 
+    public BitSet reverseBitSet(BitSet bs){
+        BitSet newBS = new BitSet(8);
+        for (int i = 0; i < bs.size(); i++){
+            if (bs.get(i)){
+                newBS.set(7-i);
+            }
+        }
+
+        return newBS;
+    }
+
+    public String bitSetToHexString(BitSet bs){
+        return String.format("%02X", bitSetToInt((reverseBitSet(bs))));
+    }
+
     public void outputMatrix(){
         for (int i = 0; i < matrix.length; i++){
             for (int j = 0; j < matrix[0].length; j++){
-                System.out.print(matrix[i][j] + " ");
+                //System.out.print(matrix[i][j]); //For printing the binary values
+                System.out.print(bitSetToHexString(matrix[i][j]) + " "); //For printing the hex values
             }
             System.out.println();
         }
-        System.out.println("\n");
-    }
-
-    public void setMatrix(BitSet[][] matrix){
-        this.matrix = matrix;
+        System.out.println();
     }
 }

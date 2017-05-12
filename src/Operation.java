@@ -25,7 +25,6 @@ public abstract class Operation {
         sbox = new SBox(false);
         inverseSbox = new SBox(true);
         states = initStates();
-        outputStates();
         keySchedule = keyExpansion();
     }
 
@@ -42,14 +41,18 @@ public abstract class Operation {
         }
     }
 
-//    public void subBytes(){
-//        state.subBytes();
-//    }
-//
-//    public void shiftRows(){
-//        state.shiftRows();
-//    }
-//
+    public void subBytes(){
+        for (Matrix state : states){
+            state.subBytes();
+        }
+    }
+
+    public void shiftRows(){
+        for (Matrix state : states){
+            state.shiftRows();
+        }
+    }
+
 //    public void mixColumns(){
 //        state.mixColumns();
 //    }

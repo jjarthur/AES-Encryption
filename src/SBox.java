@@ -41,7 +41,6 @@ public class SBox extends Matrix {
         matrix = new BitSet[16][16];
         if (inverse){
             matrix = arrayToMatrix(hexStringToBitSetArray(inverseSboxString.replaceAll("\\s",""), 256), 16, 16);
-
         }
         else{
             matrix = arrayToMatrix(hexStringToBitSetArray(sboxString.replaceAll("\\s",""), 256), 16, 16);
@@ -58,5 +57,16 @@ public class SBox extends Matrix {
 
     public static BitSet getByte(BitSet[][] sbox, int row, int column){
         return sbox[row][column];
+    }
+
+    public static void outputSBox(){
+        BitSet[][] sbox = getSbox();
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                System.out.print(sbox[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }
