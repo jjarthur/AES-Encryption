@@ -12,7 +12,7 @@ public abstract class Operation {
     protected BitSet[] plainText; //32 bytes
     protected BitSet[] key; //16 bytes
     protected BitSet[] iv; //16 bytes (0 if not applicable)
-    protected Matrix state; //Current state
+    protected List<Matrix> states; //Current states
     protected List<BitSet[][]> keySchedule;
 
     public Operation(boolean encrypt, BitSet[] transSize, BitSet[] plainText, BitSet[] key, BitSet[] iv){
@@ -24,7 +24,8 @@ public abstract class Operation {
 
         sbox = new SBox(false);
         inverseSbox = new SBox(true);
-        state = new Matrix(plainText, 4, plainText.length/4);
+        states = initStates();
+        outputStates();
         keySchedule = keyExpansion();
     }
 
@@ -41,20 +42,38 @@ public abstract class Operation {
         }
     }
 
-    public void subBytes(){
-        state.subBytes();
-    }
+//    public void subBytes(){
+//        state.subBytes();
+//    }
+//
+//    public void shiftRows(){
+//        state.shiftRows();
+//    }
+//
+//    public void mixColumns(){
+//        state.mixColumns();
+//    }
+//
+//    public void addRoundKey(){
+//        state.addRoundKey();
+//    }
 
-    public void shiftRows(){
-        state.shiftRows();
-    }
+    public List<Matrix> initStates(){
+        List<Matrix> states = new ArrayList<>();
+        int blocks = plainText.length/16; // 32/16 = 2
+        BitSet[][] tempBSArray = new BitSet[blocks][16]; //Stores the data that will be converted into states
 
-    public void mixColumns(){
-        state.mixColumns();
-    }
+        for (int i = 0; i < blocks; i++){
+            for (int j = 0; j < 16; j++) {
+                tempBSArray[i][j] = plainText[i*16+j];
+            }
+        }
 
-    public void addRoundKey(){
-        state.addRoundKey();
+        for (int i = 0; i < blocks; i++){
+            states.add(new Matrix(tempBSArray[i], 4, 4));
+        }
+
+        return states;
     }
 
     public List<BitSet[][]> keyExpansion(){
@@ -65,5 +84,11 @@ public abstract class Operation {
         }
 
         return keySchedule;
+    }
+
+    public void outputStates(){
+        for (Matrix state : states){
+            state.outputMatrix();
+        }
     }
 }
