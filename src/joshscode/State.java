@@ -18,14 +18,7 @@ public class State {
 	public State(byte[] input) throws Exception{
 		if(input.length > 16) throw new Exception("Invalid State Input. Expected lenght 16. Actual length: " + input.length);
 		state = new byte[4][4];
-		
-		int index = 0;
-		//Fill state matrix column by column
-		for(int row = 0; row < 4; row++){
-			for(int col = 0; col < 4; col++){
-				state[col][row] = input[index++]; 
-			}
-		}
+		state = arrayAsMatrix(input);
 	}
 	
 	
@@ -181,6 +174,33 @@ public class State {
 		}
 	}
 
+	//XOR's an array by turning it into a matrix then running
+	//add round key.
+	public void XOR(byte[] array){
+		byte[][] matrix = arrayAsMatrix(array);		
+		addRoundKey(matrix);
+	}
+	
+	/**
+	 * Xors the state with the given matrix 
+	 * by running addround key.
+	 * @param matrix
+	 */
+	public void XOR(byte[][] matrix){
+		addRoundKey(matrix);
+	}
+	
+	public byte[][] arrayAsMatrix(byte[] array){
+		byte[][] arrayAsMatrix = new byte[4][4];
+		int index = 0;
+		for(int row = 0; row < 4; row++){
+			for(int col = 0; col < 4; col++){
+				arrayAsMatrix[col][row] = array[index++]; 
+			}
+		}
+		return arrayAsMatrix;
+	}
+	
 	/**
 	 * Getter for the state (used in unit testing)
 	 * @return

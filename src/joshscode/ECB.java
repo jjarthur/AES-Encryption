@@ -97,25 +97,6 @@ public class ECB {
     		rk = key.getRoundKey(0);
     		s.addRoundKey(rk);    		
     	}
-    	/*for(State s : blocks){
-    		//Add the last Round key first
-    		byte[][] rk = key.getRoundKey(10);
-    		//Key.printKeyHex(rk);
-    		s.addRoundKey(rk);
-    		//128 Bit key uses 10 rounds
-    		for(int i = 9; i >= 0; i--){
-    			s.inverseShiftRows();
-    			s.inverseSubBytes();
-     			rk = key.getRoundKey(i);
-    	        s.addRoundKey(rk);
-    	        
-    	        //Don't mix columns in the last round.
-    	        if(i != 0){
-    	        	s.mixColumns(true);
-    	        }
-    		}
-    	}
-    	*/
         //Print the states (cipher text)
     	printStates();
     }

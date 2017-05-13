@@ -20,13 +20,13 @@ import java.util.stream.IntStream;
 public class AESInterface {
 
 	
-	private static String FILE = "input.txt";
+	private static String FILE = "inputCFB.txt";
 	private boolean encrypting;
 	private int mode;
 	private int transmissionSize;
 	private byte[] plainText;
 	private byte[] key;
-	private int initialisationVector;
+	private byte[] initialisationVector;
 	
 	/**
 	 * @param args
@@ -55,6 +55,12 @@ public class AESInterface {
 		switch(mode){
 			case 0: ECB ecb = new ECB(encrypting, plainText, key);
 					ecb.operate();
+					break;
+			case 1: CFB cfb = new CFB(encrypting, plainText, key, initialisationVector, transmissionSize);
+					cfb.operate();
+					break;
+			case 2: CBC cbc = new CBC(encrypting, initialisationVector, plainText, key);
+					cbc.operate();
 					break;
 		
 		}
@@ -93,7 +99,11 @@ public class AESInterface {
             input = scanner.nextLine().replaceAll("\\s", "");
             key = hexStringToByteArray(input);
             
-            initialisationVector = scanner.nextInt();            
+            input = scanner.nextLine().replaceAll("\\s", "");
+            if(input.length() > 1){
+            	initialisationVector = hexStringToByteArray(input);
+            }
+            
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
