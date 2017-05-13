@@ -42,10 +42,21 @@ public class State {
 		
 	}
 	
-	
+	/**
+	 * Performs byte substitution using the SBox
+	 */
 	public void subBytes(){
 		for(byte[] row : state){
-			SBox.subByte(row);
+			SBox.subByte(row, false);
+		}
+	}
+	
+	/**
+	 * Performs byte substitution using the inverse SBox
+	 */
+	public void inverseSubBytes(){
+		for(byte[] row : state){
+			SBox.subByte(row, true);
 		}
 	}
 	
@@ -60,6 +71,16 @@ public class State {
 		for(int i = 0; i < state.length; i++){
 			shiftRow(state[i], i);
 		}
+	}
+	
+	/**
+	 * Performs the inverse of Shift Rows 
+	 */
+	public void inverseShiftRows() {
+		for(int i = 0; i < state.length; i++){
+			shiftRow(state[i], -i);
+		}
+		
 	}
 	
 	/**
@@ -81,17 +102,32 @@ public class State {
 		System.arraycopy(temp, 0, row, 0, temp.length );
 	}
 	
+	
+	
 	/**
 	 * Mixes the columns of the state by multiplying by the state
 	 * by the fixed matrix.
+	 *  @param inverse wether we are computing the inverse mix columns
+	 * @throws Exception 
 	 */
-	public void mixColumns() {
-		byte[][] matrix = new byte[][]{
-			{(byte) 0x02, (byte) 0x03, (byte) 0x01, (byte) 0x01},
-			{(byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x01},
-			{(byte) 0x01, (byte) 0x01, (byte) 0x02, (byte) 0x03}, 
-			{(byte) 0x03, (byte) 0x01, (byte) 0x01, (byte) 0x02}  		
-    	};
+	public void mixColumns(boolean inverse) throws Exception {
+		byte[][] matrix;		
+    	if(inverse){
+	    	matrix = new byte[][]{
+				{(byte) 0x0E, (byte) 0x0B, (byte) 0x0D, (byte) 0x09},
+				{(byte) 0x09, (byte) 0x0E, (byte) 0x0B, (byte) 0x0D},
+				{(byte) 0x0D, (byte) 0x09, (byte) 0x0E, (byte) 0x0B}, 
+				{(byte) 0x0B, (byte) 0x0D, (byte) 0x09, (byte) 0x0E}  		
+	    	};
+    	}
+    	else{
+    		matrix = new byte[][]{
+    			{(byte) 0x02, (byte) 0x03, (byte) 0x01, (byte) 0x01},
+    			{(byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x01},
+    			{(byte) 0x01, (byte) 0x01, (byte) 0x02, (byte) 0x03}, 
+    			{(byte) 0x03, (byte) 0x01, (byte) 0x01, (byte) 0x02}  		
+        	};
+    	}
     	
     	//New Matrix which will replace sate
     	byte[][] result = new byte[state.length][state[0].length];
@@ -102,24 +138,13 @@ public class State {
     		for(int j = 0; j < state[0].length; j++){
     			//Loop through the ith row and multiply by the jth column
     			for(int k = 0; k < matrix[0].length; k++){
-    				//If multiply by 2 shift left 1
-    				if(matrix[i][k] == 0x02){
-    					result[i][j] ^= GaloisLookUp.multiplyBy2(state[k][j]);
-    				}
-    				//If multiply by 3 shift left 1, XOR with Itself
-    				else if(matrix[i][k] == 0x03){
-    					result[i][j] ^= GaloisLookUp.multiplyBy3(state[k][j]);
-    				}
-    				//If multiply by one just add itself
-    				else{
-    					result[i][j] ^= state[k][j]; 
-    				}
+    				result[i][j] ^= GaloisLookUp.multiply(state[k][j], matrix[i][k]);
     			}
     		}
     	}
 		state = result;
 	}
-
+	
 	/**
 	 * Prints the state matrix in Decimal Format
 	 */
@@ -144,19 +169,24 @@ public class State {
 		}
 	}
 
-
 	/**
 	 * Prints the state in Hexadecimal format on a single line.
 	 * Going down columns first.
 	 */
 	public void printStateHexFlat() {
-		System.out.println("=======================State======================");
 		for(int i = 0; i < state.length; i++){
 			for(int j = 0; j < state[0].length; j++){
 				System.out.print(String.format("%02X",  state[j][i] & 0xFF) + " ");
 			}
 		}
-		System.out.println();
+	}
+
+	/**
+	 * Getter for the state (used in unit testing)
+	 * @return
+	 */
+	public byte[][] getState(){
+		return state;
 	}
 	
 	@Override
@@ -170,4 +200,7 @@ public class State {
 		}	
 		return result;
 	}
+
+
+	
 }

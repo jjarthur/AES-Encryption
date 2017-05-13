@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 public class AESInterface {
 
 	
-	private static String FILE = "input4.txt";
+	private static String FILE = "input3.txt";
 	private boolean encrypting;
 	private int mode;
 	private int transmissionSize;

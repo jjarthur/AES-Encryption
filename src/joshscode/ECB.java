@@ -43,8 +43,9 @@ public class ECB {
     
     /**
 	 * Operates according to the encrypting bolean 
+     * @throws Exception 
 	 */
-	public void operate() {
+	public void operate() throws Exception {
 		if(encrypting){
 			encrypt();
 		}
@@ -54,7 +55,7 @@ public class ECB {
 		
 	}
 
-    public void encrypt(){
+    public void encrypt() throws Exception{
     	//For each block
     	for(State s : blocks){
     		//Add Round key first
@@ -67,7 +68,7 @@ public class ECB {
     	        s.shiftRows();
     	        //Don't mix columns in the 10th round.
     	        if(i != 10){
-    	        	s.mixColumns();
+    	        	s.mixColumns(false);
     	        }
     	        rk = key.getRoundKey(i);
     	        //Key.printKeyHex(rk);
@@ -78,26 +79,42 @@ public class ECB {
     	printStates();
     }
     
-    public void decrypt(){
+    public void decrypt() throws Exception{
 		//For each block
+    	byte[][] rk;
     	for(State s : blocks){
+    		for(int i = 10; i >=1; i--){
+        		rk = key.getRoundKey(i);
+        		s.addRoundKey(rk);
+        		if(i != 10){
+        			s.mixColumns(true);
+        		}
+	    		s.inverseShiftRows();
+	    		s.inverseSubBytes();
+    		}
+    		
+    		rk = key.getRoundKey(0);
+    		s.addRoundKey(rk);    		
+    	}
+    	/*for(State s : blocks){
     		//Add the last Round key first
     		byte[][] rk = key.getRoundKey(10);
     		//Key.printKeyHex(rk);
     		s.addRoundKey(rk);
     		//128 Bit key uses 10 rounds
-    		for(int i = 9; i <= 0; i--){
-    			//s.inverseShiftRows();
-    			//s.inverseSubBytes();
-    			rk = key.getRoundKey(i);
-    	        //Key.printKeyHex(rk);
+    		for(int i = 9; i >= 0; i--){
+    			s.inverseShiftRows();
+    			s.inverseSubBytes();
+     			rk = key.getRoundKey(i);
     	        s.addRoundKey(rk);
+    	        
     	        //Don't mix columns in the last round.
     	        if(i != 0){
-    	        	s.mixColumns();
+    	        	s.mixColumns(true);
     	        }
     		}
     	}
+    	*/
         //Print the states (cipher text)
     	printStates();
     }
@@ -113,9 +130,5 @@ public class ECB {
     	}
 		
 	}
-
-	
-
-	
 
 }

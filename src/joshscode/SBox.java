@@ -69,7 +69,7 @@ public class SBox {
 			return inverseSBox[row][col];
 		}
 		
-		public static void subByte(byte[] row){
+		public static void subByte(byte[] row, boolean inverse){
 			byte b;
 			//Loop through every byte in the row
 			for(int i = 0; i < row.length; i++){
@@ -79,8 +79,7 @@ public class SBox {
 				//Get the column of the SBox (last 4 bits)
 				byte colIndex = (byte) (b  & 0xF);
 				//substitute s[i][j] with sBox(row, col)
-				row[i] = getByte(rowIdex, colIndex);
-				
+				row[i] = inverse ? getInverse(rowIdex, colIndex) : getByte(rowIdex, colIndex);
 			}
 		}
 

@@ -50,7 +50,7 @@ public class Key {
 		//Start at Zero because you have to add round key before starting
 		round = 0;
     	expandKey(k);
-    	printKeyHex(key);
+    	//printKeyHex(key);
 	}
 	
 	private void expandKey(byte[] k){
@@ -86,7 +86,7 @@ public class Key {
 			State.shiftRow(gw3, 1);
 			
 			//Substitute Bytes on w3.
-			SBox.subByte(gw3);
+			SBox.subByte(gw3, false);
 			
 			//Get the round constant (increments round as well)		
 			byte[] rconi = new byte[] {rcon[++round], (byte) 0x00, (byte) 0x00, (byte) 0x00};
@@ -161,7 +161,6 @@ public class Key {
 	 * Prints the state in Hexadecimal Format
 	 */
 	public static void printKeyHex(byte[][] matrix){
-		System.out.println("==============================KEY================================");
 		for(int i = 0; i < matrix.length; i++){
 			for(int j = 0; j < matrix[0].length; j++){
 				System.out.print(String.format("%02X",  matrix[i][j] & 0xFF) + " ");
