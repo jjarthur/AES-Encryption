@@ -6,12 +6,8 @@
  */
 package joshscode;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
 /**
  * @author Josh
@@ -20,7 +16,7 @@ import java.util.stream.IntStream;
 public class AESInterface {
 
 	
-	private static String FILE = "inputCFB.txt";
+	private static String FILE = "inputOFBd.txt";
 	private boolean encrypting;
 	private int mode;
 	private int transmissionSize;
@@ -59,8 +55,11 @@ public class AESInterface {
 			case 1: CFB cfb = new CFB(encrypting, plainText, key, initialisationVector, transmissionSize);
 					cfb.operate();
 					break;
-			case 2: CBC cbc = new CBC(encrypting, initialisationVector, plainText, key);
+			case 2: CBC cbc = new CBC(encrypting, plainText, key, initialisationVector);
 					cbc.operate();
+					break;
+			case 3: OFB ofb = new OFB(encrypting, plainText, key, initialisationVector, transmissionSize);
+					ofb.operate();
 					break;
 		
 		}
