@@ -63,7 +63,7 @@ public class StateTest {
 		
 		//Check each row of the matrix
 		for(int i = 0; i < shiftedMatrix.length; i++){
-			Assert.assertArrayEquals(shiftedMatrix[i], state.getState()[i]);
+			Assert.assertArrayEquals(shiftedMatrix[i], state.getStateMatrix()[i]);
 		}
 		
 	}
@@ -85,7 +85,7 @@ public class StateTest {
 		
 		//Check each row of the matrix
 		for(int i = 0; i < shiftedMatrix.length; i++){
-			Assert.assertArrayEquals(shiftedMatrix[i], state.getState()[i]);
+			Assert.assertArrayEquals(shiftedMatrix[i], state.getStateMatrix()[i]);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class StateTest {
 		
 		//Check each row of the matrix
 		for(int i = 0; i < subbedMatrix.length; i++){
-			Assert.assertArrayEquals(subbedMatrix[i], state.getState()[i]);
+			Assert.assertArrayEquals(subbedMatrix[i], state.getStateMatrix()[i]);
 		}
 	}
 	
@@ -121,7 +121,7 @@ public class StateTest {
 		
 		//Check each row of the matrix
 		for(int i = 0; i < subbedMatrix.length; i++){
-			Assert.assertArrayEquals(subbedMatrix[i], state.getState()[i]);
+			Assert.assertArrayEquals(subbedMatrix[i], state.getStateMatrix()[i]);
 		}
 	}
 	
@@ -147,7 +147,7 @@ public class StateTest {
 		
 		//Check each row of the matrix
 		for(int i = 0; i < mixedMatrix.length; i++){
-			Assert.assertArrayEquals(mixedMatrix[i], state.getState()[i]);
+			Assert.assertArrayEquals(mixedMatrix[i], state.getStateMatrix()[i]);
 		}
 	}
 	
@@ -185,7 +185,7 @@ public class StateTest {
 		
 		//Check each row of the matrix
 		for(int i = 0; i < stateAfterAddingROundKey.length; i++){
-			Assert.assertArrayEquals(stateAfterAddingROundKey[i], state.getState()[i]);
+			Assert.assertArrayEquals(stateAfterAddingROundKey[i], state.getStateMatrix()[i]);
 		}
 	}
 	

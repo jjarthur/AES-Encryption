@@ -116,5 +116,53 @@ public class ECBTest {
 		assertEquals(expectedOutput, outContent.toString());
 		
 	}
+	
+	@Test
+	public void testEncryptionAndDecryoptionWork() throws Exception{
+		byte[] plainText = new byte[] {
+					(byte) 0x5A, (byte) 0x67, (byte) 0xF0, (byte) 0x12, 
+					(byte) 0xCF, (byte) 0x98, (byte) 0xAB, (byte) 0xCD, 
+					(byte) 0x00, (byte) 0xE4, (byte) 0x35, (byte) 0xFF, 
+					(byte) 0x01, (byte) 0x35, (byte) 0x78, (byte) 0x91, 
+					(byte) 0xFA, (byte) 0xC2, (byte) 0xCF, (byte) 0x98, 
+					(byte) 0xAB, (byte) 0xCD, (byte) 0x00, (byte) 0xE4, 
+					(byte) 0x35, (byte) 0xFF, (byte) 0x01, (byte) 0x35, 
+					(byte) 0x00, (byte) 0xE4, (byte) 0x35, (byte) 0xFF};
+		
+		byte[] key = new byte[] {
+				(byte) 0x00, (byte) 0xE4, (byte) 0x35, (byte) 0xFF, 
+				(byte) 0x01, (byte) 0x35, (byte) 0x78, (byte) 0x91, 
+				(byte) 0xAB, (byte) 0xCD, (byte) 0x00, (byte) 0xE4, 
+				(byte) 0x67, (byte) 0xF0, (byte) 0x12, (byte) 0xCF};
+		
+		//Create an ECB object to encrypt the message
+		ECB encrypter = new ECB(true, plainText, key);
+		encrypter.encrypt();
+		
+		byte[] cipherText = encrypter.getState();
+		
+		//Check the cipher text is as expected.
+		byte[] expectedCipherText = new byte[] {
+				(byte) 0x45, (byte) 0xfe, (byte) 0x57, (byte) 0x64, 
+				(byte) 0xa3, (byte) 0x0f, (byte) 0xda, (byte) 0x15, 
+				(byte) 0x29, (byte) 0x43, (byte) 0x66, (byte) 0x73, 
+				(byte) 0x61, (byte) 0x92, (byte) 0x1d, (byte) 0xb7,
+				(byte) 0x90, (byte) 0x28, (byte) 0xce, (byte) 0xf7, 
+				(byte) 0xe6, (byte) 0x81, (byte) 0x3e, (byte) 0xa9, 
+				(byte) 0xa6, (byte) 0x97, (byte) 0xc8, (byte) 0x69, 
+				(byte) 0xee, (byte) 0x31, (byte) 0x24, (byte) 0x51
+		};
+		
+		assertArrayEquals(expectedCipherText, cipherText);
+		
+		//Create a new ECB to decrypt
+		ECB decrypter = new ECB(false, cipherText, key);
+		decrypter.decrypt();
+		
+		byte[] decryptedPlainText = decrypter.getState();
+		
+		assertArrayEquals(plainText, decryptedPlainText);
+		
+	}
 
 }

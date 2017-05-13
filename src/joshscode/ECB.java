@@ -1,6 +1,7 @@
 package joshscode;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class ECB {
 
@@ -129,6 +130,17 @@ public class ECB {
     		s.printStateHexFlat();
     	}
 		
+	}
+	
+	public byte[] getState(){
+		byte[] result = blocks[0].getStateArray(); 
+		for(int i = 0; i < numberOfBlocks - 1; i++){
+			byte[] b1 = blocks[i].getStateArray();
+			byte[] b2 = blocks[i+1].getStateArray();
+			result = Arrays.copyOf(b1, b1.length + b2.length);
+			System.arraycopy(b2, 0, result, b1.length, b2.length);
+		}
+		return result;
 	}
 
 }

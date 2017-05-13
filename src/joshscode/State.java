@@ -185,8 +185,19 @@ public class State {
 	 * Getter for the state (used in unit testing)
 	 * @return
 	 */
-	public byte[][] getState(){
+	public byte[][] getStateMatrix(){
 		return state;
+	}
+	
+	public byte[] getStateArray(){
+		byte[] a = new byte[16];
+		int i = 0;
+		for(int col = 0; col < state.length; col++){
+			for(int row = 0; row < state[0].length; row++){
+				a[i++] = state[row][col];
+			}
+		}
+		return a;
 	}
 	
 	@Override
