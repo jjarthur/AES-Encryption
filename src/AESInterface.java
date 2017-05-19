@@ -1,90 +1,119 @@
-//Main class
-//Author: James Arthur
-//Last edit: 06/05/2017
-
 /**
- * This AESInterface class contains main method of the program which is used to carry out a
- * series of operations. It also contains methods for receiving user input and displaying
- * a summary of the output.
+ * Author: Joshua Crompton and James Arthur
+ * Date: May 12, 2017
+ * Class: AESInterface.java
+ * Description: This is the main entry point to 
+ * 				the program. It reads the input 
+ * 				file and initializes the encryption mode.
  */
 
-import java.util.*;
-import java.io.*;
+import java.io.FileReader;
+import java.util.Scanner;
 
 public class AESInterface {
 
-    //Private attributes
-    private static String file;
-    private int mode; //0 = ECB, 1 = CFB, 2 = CBC, 3 = OFB
-    private boolean encrypt = true; //True if encrypting, false if decrypting
-    private BitSet[] transSize = new BitSet[16]; //Between 1 and 16 bytes (0 if not applicable)
-    private BitSet[] plainText = new BitSet[32]; //32 bytes
-    private BitSet[] key = new BitSet[16]; //16 bytes
-    private BitSet[] iv = new BitSet[16]; //16 bytes (0 if not applicable)
-    private Operation ecb; //Electronic Codebook mode
-    private Operation cbc; //Cipher Block Chaining mode
-    private Operation cfb; //Cipher Feedback mode
-    private Operation ofb; //Output Feedback mode
+	
+	private static String FILE = "inputOFBd.txt";
+	private boolean encrypting;
+	private int mode;
+	private int transmissionSize;
+	private byte[] plainText;
+	private byte[] key;
+	private byte[] initialisationVector;
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		if(args.length > 0){
+			FILE = args[0];
+		}
+		
+		AESInterface aes = new AESInterface();
+		try {
+			aes.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    //Public methods
+	}
+	
+	/**
+	 * Runs AES Encryption on the given file.
+	 * @throws Exception 
+	 */
+	private void run() throws Exception {
+		//Read input
+		readFile(FILE);
+		switch(mode){
+			case 0: ECB ecb = new ECB(encrypting, plainText, key);
+					ecb.operate();
+					break;
+			case 1: CFB cfb = new CFB(encrypting, plainText, key, initialisationVector, transmissionSize);
+					cfb.operate();
+					break;
+			case 2: CBC cbc = new CBC(encrypting, plainText, key, initialisationVector);
+					cbc.operate();
+					break;
+			case 3: OFB ofb = new OFB(encrypting, plainText, key, initialisationVector, transmissionSize);
+					ofb.operate();
+					break;
+		
+		}
+	}
 
-    /**
-     * Calls run().
-     */
-    public static void main(String[] args){
-        AESInterface aes = new AESInterface();
-        file = args[0];
-
-        aes.run();
-    }
-
-    public void run(){
-        getInput();
-
-        switch (mode) {
-            case 0:
-                ecb = new ECB(true, transSize, plainText, key, iv);
-                ecb.run();
-        }
-    }
-
-    public void getInput(){
-
-        try {
-            FileReader fr = new FileReader(new File(file));
-            Scanner scanner = new Scanner(fr);
-            String tempString;
-
-            //Encrypt or decrypt
+	/**
+	 * @param fILE2
+	 */
+	private void readFile(String filePath) {
+		/*
+		 *  0		0 = Encrpyting
+			0		MODE 0 = ECB, 1 = CFB, 2 = CBC, 3 = OFB
+			0		Transmission Siz
+			5A 67 F0 12 CF 98 AB CD 00 E4 35 FF 01 35 78 91 FA C2 CF 98 AB CD 00 E4 35 FF 01 35 00 E4 35 FF      PLAINTEXT
+			00 E4 35 FF 01 35 78 91 AB CD 00 E4 67 F0 12 CF														 KEY
+			0																									 Initilisation Vector
+		 */
+		try(Scanner scanner = new Scanner(new FileReader(filePath))){
+			//Read in whether encrypting or decrypting
             if (scanner.nextInt() == 0){
-                encrypt = false;
+                encrypting = true;
             }
 
             //Getting mode
             mode = scanner.nextInt();
             scanner.nextLine(); //Clear scanner buffer
-
-            //Getting transSize
-            tempString = scanner.nextLine().replaceAll("\\s","");
-            if (!tempString.equals("0")){
-                transSize = Matrix.hexStringToBitSetArray(tempString, transSize.length);
+            
+            //Get Transmission Size
+            transmissionSize = scanner.nextInt();
+            scanner.nextLine();
+            
+            //Get the plaintext removing spaces.
+            String input = scanner.nextLine().replaceAll("\\s", "");;
+            plainText = hexStringToByteArray(input);
+            
+            input = scanner.nextLine().replaceAll("\\s", "");
+            key = hexStringToByteArray(input);
+            
+            input = scanner.nextLine().replaceAll("\\s", "");
+            if(input.length() > 1){
+            	initialisationVector = hexStringToByteArray(input);
             }
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+	}
+	
+	public static byte[] hexStringToByteArray(String s) {
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
+	}
 
-            //Getting plainText
-            plainText = Matrix.hexStringToBitSetArray(scanner.nextLine().replaceAll("\\s",""), plainText.length);
-
-            //Getting key
-            key = Matrix.hexStringToBitSetArray(scanner.nextLine().replaceAll("\\s",""), key.length);
-
-            //Getting initialization vector
-            tempString = scanner.nextLine().replaceAll("\\s","");
-            if (!tempString.equals("0")){
-                iv = Matrix.hexStringToBitSetArray(tempString, iv.length);
-            }
-
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
